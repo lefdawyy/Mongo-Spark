@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="run_2.12-1.6.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/null/Coursier/cache/v1/https/repo1.maven.org/maven2/org/scala-sbt/run_2.12/1.6.2/run_2.12-1.6.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
