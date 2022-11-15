@@ -63,7 +63,7 @@ object Main {
     val df = MongoSpark.load(spark)
     val filterDF = df
       .filter(s"created_at between '${startDate}' and '${endDate}'")
-      .filter(pow(df("coordinates.coordinates")(0) - lat,2) + pow(df("coordinates.coordinates")(1) - long,2) <= radius * radius)
+      .filter(pow(df("coordinates.coordinates")(0) - long,2) + pow(df("coordinates.coordinates")(1) - lat,2) <= radius * radius)
 
   try {
     val resultDF = filterDF.select("text")
@@ -72,15 +72,15 @@ object Main {
       .map(f => f.split(" ").toList)
       .map(f => f.count(_.toLowerCase() == word))
       .reduce(_ + _)
-    println(s"the word(${word}) repeated: " + resultDF)
+    println(s"the word (${word}) repeated in geo location [$long , $lat] with radius [$radius] between $startDate and $endDate is: " + resultDF)
   }
   catch {
-    case _: Throwable => println(s"the word (${word}) repeated: 0")
+    case _: Throwable => println(s"the word (${word}) repeated in geo location [$long , $lat] with radius [$radius] between $startDate and $endDate is: 0")
   }
 
 
     //2 : using mongodb library by sending a normal mongoDB query to filter by time and space.
-    val filterDB =  collection.find(Filters.and(Filters.geoWithinCenter("coordinates.coordinates",lat,long ,radius),
+    val filterDB =  collection.find(Filters.and(Filters.geoWithinCenter("coordinates.coordinates",long,lat ,radius),
       Filters.gte("created_at" ,LocalDate.parse(startDate)),
       Filters.lte("created_at" ,LocalDate.parse(endDate)),
     )).results()
@@ -91,10 +91,10 @@ object Main {
       .map(f => f.split(" ").toList)
       .map(f => f.count(_.toLowerCase() == word))
       .reduce(_ + _)
-    println(s"the word (${word}) repeated: " + resultDB)
+    println(s"the word (${word}) repeated in geo location [$long , $lat] with radius [$radius] between $startDate and $endDate is: " + resultDB)
   }
   catch {
-    case _: Throwable => println(s"the word (${word}) repeated: 0")
+    case _: Throwable => println(s"the word (${word}) repeated in geo location [$long , $lat] with radius [$radius] between $startDate and $endDate is: 0")
   }
 
 
